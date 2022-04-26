@@ -14,3 +14,9 @@ Learn and dominate the React ecosystem once and for all.
 - React Spring
 - Typescript
 - Firebase
+
+# Coin Tracker
+
+/ -> home
+/:id -> coin detail
+/:id/chart
