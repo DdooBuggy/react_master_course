@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useQuery } from "react-query";
+import { Helmet } from "react-helmet";
 import { fetchCoins } from "../api";
 
 const Container = styled.div`
@@ -19,7 +20,7 @@ const Header = styled.header`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
+  background-color: #f1f2f6;
   color: ${(props) => props.theme.bgColor};
   border-radius: 15px;
   margin-bottom: 10px;
@@ -37,7 +38,8 @@ const Coin = styled.li`
 `;
 
 const Title = styled.h1`
-  font-size: 48;
+  font-size: 60px;
+  font-weight: 600;
   color: ${(props) => props.theme.accentColor};
 `;
 
@@ -66,6 +68,9 @@ function Coins() {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
   return (
     <Container>
+      <Helmet>
+        <title>Coins</title>
+      </Helmet>
       <Header>
         <Title>Coins</Title>
       </Header>
@@ -75,7 +80,7 @@ function Coins() {
         <CoinsList>
           {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
-              <Link to={`/${coin.id}`} state={{ name: coin.name }}>
+              <Link to={`/${coin.id}/chart`} state={{ name: coin.name }}>
                 <Img
                   src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
                 />

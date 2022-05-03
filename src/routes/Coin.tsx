@@ -2,30 +2,37 @@ import { useLocation, useParams } from "react-router";
 import { Outlet, useMatch, Link } from "react-router-dom";
 import styled from "styled-components";
 import { useQuery } from "react-query";
+import { Helmet } from "react-helmet";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 // components
-const Title = styled.h1`
-  font-size: 48px;
-  color: ${(props) => props.theme.accentColor};
-`;
-
-const Loader = styled.span`
-  text-align: center;
-  display: block;
-`;
-
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
   margin: 0 auto;
 `;
-
 const Header = styled.header`
   height: 15vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+const Title = styled.h1`
+  font-size: 50px;
+  font-weight: 600;
+  color: ${(props) => props.theme.accentColor};
+`;
+const Loader = styled.span`
+  text-align: center;
+  display: block;
+`;
+const BackBtn = styled.div`
+  display: flex;
+  width: 100%;
+  font-size: 20px;
 `;
 
 const Tabs = styled.div`
@@ -34,12 +41,11 @@ const Tabs = styled.div`
   margin: 25px 0px;
   gap: 10px;
 `;
-
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 600;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 7px 0px;
   border-radius: 10px;
@@ -51,7 +57,6 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
-// style
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
@@ -65,14 +70,21 @@ const OverviewItem = styled.div`
   align-items: center;
   width: 33%;
   span:first-child {
-    font-size: 10px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 200;
     text-transform: uppercase;
     margin-bottom: 5px;
+  }
+  span:last-child {
+    font-size: 22px;
+    font-weight: 600;
   }
 `;
 const Description = styled.p`
   margin: 20px 0px;
+  text-align: justify;
+  text-indent: 2em;
+  line-height: 1.4;
 `;
 
 // type def
@@ -148,13 +160,21 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PiceData>(
     ["tickers", coinId],
-    () => fetchCoinInfo(coinId ? coinId : "")
+    () => fetchCoinTickers(coinId ? coinId : ""),
+    { refetchInterval: 5000 }
   );
   const loading = infoLoading || tickersLoading;
-
   return (
     <Container>
+      <Helmet>
+        <title>{name ? name : loading ? "Loading..." : infoData?.name}</title>
+      </Helmet>
       <Header>
+        <BackBtn>
+          <Link to={"/"}>
+            <FontAwesomeIcon icon={solid("arrow-left-long")} />
+          </Link>
+        </BackBtn>
         <Title>{name ? name : loading ? "Loading..." : infoData?.name}</Title>
       </Header>
       {loading ? (
@@ -163,26 +183,26 @@ function Coin() {
         <>
           <Overview>
             <OverviewItem>
-              <span>Rank:</span>
+              <span>Rank</span>
               <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Symbol:</span>
+              <span>Symbol</span>
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price</span>
+              <span>${tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
-              <span>Total Suply:</span>
+              <span>Total Suply</span>
               <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Max Supply:</span>
+              <span>Max Supply</span>
               <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
