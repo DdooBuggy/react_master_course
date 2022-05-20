@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../api";
 import { clickedCategory, SliderCategory } from "../atoms";
@@ -40,7 +40,7 @@ const arrowVar = {
   },
   hover: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    transition: { duration: 0.5 },
+    transition: { duration: 0.3 },
   },
 };
 const Row = styled(motion.div)`
@@ -58,13 +58,8 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-position: center center;
   height: 200px;
   font-size: 66px;
+  border-radius: 10px;
   cursor: pointer;
-  /* &:first-child {
-    transform-origin: center left;
-  }
-  &:last-child {
-    transform-origin: center right;
-  } */
 `;
 const rowVar = {
   hidden: (forward: boolean) => ({
@@ -88,16 +83,21 @@ const boxVar = {
   },
 };
 const Info = styled(motion.div)`
-  background-color: ${(props) => props.theme.black.lighter};
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  border-radius: 10px;
   padding: 20px;
   opacity: 0;
   position: absolute;
   width: 100%;
   bottom: 0;
-  h4 {
-    text-align: center;
-    font-size: 20px;
-  }
+`;
+const InfoTitleShort = styled.h4`
+  text-align: center;
+  font-size: 20px;
+`;
+const InfoTitleLong = styled.h4`
+  text-align: center;
+  font-size: 15px;
 `;
 const infoVar = {
   hover: {
@@ -210,7 +210,11 @@ function Slider({ movies, category }: IMovies) {
                 style={boxTransformOrigin(mapIndex)}
               >
                 <Info variants={infoVar}>
-                  <h4>{movie.title}</h4>
+                  {movie.title.length > 35 ? (
+                    <InfoTitleLong>{movie.title}</InfoTitleLong>
+                  ) : (
+                    <InfoTitleShort>{movie.title}</InfoTitleShort>
+                  )}
                 </Info>
               </Box>
             ))}

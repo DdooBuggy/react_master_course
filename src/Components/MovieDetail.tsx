@@ -34,12 +34,15 @@ const BigCover = styled.div`
   height: 400px;
 `;
 
-const BigTitle = styled.h3`
+const BigTitleShort = styled.h3`
   color: ${(props) => props.theme.white.lighter};
   padding: 20px;
   font-size: 46px;
   position: relative;
   top: -80px;
+`;
+const BigTitleLong = styled(BigTitleShort)`
+  font-size: 35px;
 `;
 
 const BigOverview = styled.p`
@@ -93,9 +96,15 @@ function MovieDetail({ results, category }: IMovies) {
                       )})`,
                     }}
                   />
-                  <BigTitle key="MovieDetailBigTitle">
-                    {clickedMovie.title}
-                  </BigTitle>
+                  {clickedMovie.title.length < 35 ? (
+                    <BigTitleShort key="MovieDetailBigTitle">
+                      {clickedMovie.title}
+                    </BigTitleShort>
+                  ) : (
+                    <BigTitleLong key="MovieDetailBigTitle">
+                      {clickedMovie.title}
+                    </BigTitleLong>
+                  )}
                   <BigOverview key="MovieDetailBigOverview">
                     {clickedMovie.overview}
                   </BigOverview>

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const Nav = styled(motion.div)`
+  z-index: 99;
   display: flex;
   justify-content: space-between;
   align-items: center;

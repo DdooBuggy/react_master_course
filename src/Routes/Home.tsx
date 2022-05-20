@@ -5,7 +5,9 @@ import { makeImagePath } from "../utils";
 import Slider from "../Components/Slider";
 import MovieDetail from "../Components/MovieDetail";
 import { clickedCategory, SliderCategory } from "../atoms";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -34,6 +36,14 @@ const Overview = styled.p`
   font-size: 30px;
   width: 50%;
 `;
+const BannerBtn = styled(motion.button)`
+  width: 100px;
+  height: 40px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  border-radius: 10px;
+`;
 
 function Home() {
   const { data: nowPlayingMovies, isLoading: nowLoading } =
@@ -53,6 +63,22 @@ function Home() {
       getMovies(SliderCategory.upcoming)
     );
   const clicked = useRecoilValue(clickedCategory);
+  let movies;
+  if (clicked === SliderCategory.now_playing) {
+    movies = nowPlayingMovies;
+  } else if (clicked === SliderCategory.popular) {
+    movies = popularMovies;
+  } else if (clicked === SliderCategory.top_rated) {
+    movies = topRatedMovies;
+  } else if (clicked === SliderCategory.upcoming) {
+    movies = upcomingMovies;
+  }
+  const setClicked = useSetRecoilState(clickedCategory);
+  const navigate = useNavigate();
+  const onClicked = () => {
+    setClicked(SliderCategory.now_playing);
+    navigate(`/movies/${nowPlayingMovies?.results[0].id}`);
+  };
   return (
     <Wrapper>
       {nowLoading && popularLoading && topRatedLoading && upcomingLoading ? (
@@ -66,32 +92,24 @@ function Home() {
           >
             <Title>{nowPlayingMovies?.results[0].title}</Title>
             <Overview>{nowPlayingMovies?.results[0].overview}</Overview>
+            <AnimatePresence>
+              <BannerBtn
+                layoutId={
+                  nowPlayingMovies?.results[0].id +
+                  SliderCategory.now_playing +
+                  ""
+                }
+                onClick={onClicked}
+              >
+                Details &rarr;
+              </BannerBtn>
+            </AnimatePresence>
           </Banner>
-          {/* sliders and movieDetails ---------------------------------------------- */}
-          {clicked === SliderCategory.now_playing ? (
-            <MovieDetail
-              category={SliderCategory.now_playing}
-              results={nowPlayingMovies?.results as IMovie[]}
-            />
-          ) : null}
-          {clicked === SliderCategory.popular ? (
-            <MovieDetail
-              category={SliderCategory.popular}
-              results={popularMovies?.results as IMovie[]}
-            />
-          ) : null}
-          {clicked === SliderCategory.top_rated ? (
-            <MovieDetail
-              category={SliderCategory.top_rated}
-              results={topRatedMovies?.results as IMovie[]}
-            />
-          ) : null}
-          {clicked === SliderCategory.upcoming ? (
-            <MovieDetail
-              category={SliderCategory.upcoming}
-              results={upcomingMovies?.results as IMovie[]}
-            />
-          ) : null}
+
+          <MovieDetail
+            category={clicked}
+            results={movies?.results as IMovie[]}
+          />
 
           <Slider
             category={SliderCategory.now_playing}
