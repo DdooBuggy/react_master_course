@@ -1,15 +1,14 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult } from "../api";
+import { getMovies, IGetMoviesResult, IMovie } from "../api";
 import { makeImagePath } from "../utils";
 import Slider from "../Components/Slider";
 import MovieDetail from "../Components/MovieDetail";
-import { useRecoilState } from "recoil";
-import { nowPlayingIndex, SliderCategory } from "../atoms";
+import { clickedCategory, SliderCategory } from "../atoms";
+import { useRecoilValue } from "recoil";
 
 const Wrapper = styled.div`
   background-color: black;
-  padding-bottom: 200px;
 `;
 const Loader = styled.div`
   height: 20vh;
@@ -37,17 +36,26 @@ const Overview = styled.p`
 `;
 
 function Home() {
-  const { data: nowPlayingMovies, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    () => getMovies("now_playing")
-  );
-  const { data: popularMovies, isLoading: popularLoading } =
-    useQuery<IGetMoviesResult>(["movies", "popular"], () =>
-      getMovies("popular")
+  const { data: nowPlayingMovies, isLoading: nowLoading } =
+    useQuery<IGetMoviesResult>(["movies", SliderCategory.now_playing], () =>
+      getMovies(SliderCategory.now_playing)
     );
+  const { data: popularMovies, isLoading: popularLoading } =
+    useQuery<IGetMoviesResult>(["movies", SliderCategory.popular], () =>
+      getMovies(SliderCategory.popular)
+    );
+  const { data: topRatedMovies, isLoading: topRatedLoading } =
+    useQuery<IGetMoviesResult>(["movies", SliderCategory.top_rated], () =>
+      getMovies(SliderCategory.top_rated)
+    );
+  const { data: upcomingMovies, isLoading: upcomingLoading } =
+    useQuery<IGetMoviesResult>(["movies", SliderCategory.upcoming], () =>
+      getMovies(SliderCategory.upcoming)
+    );
+  const clicked = useRecoilValue(clickedCategory);
   return (
     <Wrapper>
-      {isLoading ? (
+      {nowLoading && popularLoading && topRatedLoading && upcomingLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -59,27 +67,48 @@ function Home() {
             <Title>{nowPlayingMovies?.results[0].title}</Title>
             <Overview>{nowPlayingMovies?.results[0].overview}</Overview>
           </Banner>
-          {nowPlayingMovies ? (
+          {/* sliders and movieDetails ---------------------------------------------- */}
+          {clicked === SliderCategory.now_playing ? (
             <MovieDetail
               category={SliderCategory.now_playing}
-              movies={nowPlayingMovies}
+              results={nowPlayingMovies?.results as IMovie[]}
             />
           ) : null}
-          {nowPlayingMovies ? (
-            <Slider
-              category={SliderCategory.now_playing}
-              movies={nowPlayingMovies}
-            />
-          ) : null}
-          {popularMovies ? (
+          {clicked === SliderCategory.popular ? (
             <MovieDetail
               category={SliderCategory.popular}
-              movies={popularMovies}
+              results={popularMovies?.results as IMovie[]}
             />
           ) : null}
-          {popularMovies ? (
-            <Slider category={SliderCategory.popular} movies={popularMovies} />
+          {clicked === SliderCategory.top_rated ? (
+            <MovieDetail
+              category={SliderCategory.top_rated}
+              results={topRatedMovies?.results as IMovie[]}
+            />
           ) : null}
+          {clicked === SliderCategory.upcoming ? (
+            <MovieDetail
+              category={SliderCategory.upcoming}
+              results={upcomingMovies?.results as IMovie[]}
+            />
+          ) : null}
+
+          <Slider
+            category={SliderCategory.now_playing}
+            movies={nowPlayingMovies as IGetMoviesResult}
+          />
+          <Slider
+            category={SliderCategory.popular}
+            movies={popularMovies as IGetMoviesResult}
+          />
+          <Slider
+            category={SliderCategory.top_rated}
+            movies={topRatedMovies as IGetMoviesResult}
+          />
+          <Slider
+            category={SliderCategory.upcoming}
+            movies={upcomingMovies as IGetMoviesResult}
+          />
         </>
       )}
     </Wrapper>

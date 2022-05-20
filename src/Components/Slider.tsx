@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../api";
-import { SliderCategory } from "../atoms";
+import { clickedCategory, SliderCategory } from "../atoms";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -14,6 +15,7 @@ const Wrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 200px;
+  margin-bottom: 100px;
 `;
 const SliderTitle = styled.h3`
   font-size: 30px;
@@ -57,12 +59,12 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   height: 200px;
   font-size: 66px;
   cursor: pointer;
-  &:first-child {
+  /* &:first-child {
     transform-origin: center left;
   }
   &:last-child {
     transform-origin: center right;
-  }
+  } */
 `;
 const rowVar = {
   hidden: (forward: boolean) => ({
@@ -115,6 +117,7 @@ function Slider({ movies, category }: IMovies) {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [forward, setForward] = useState(true);
+  const setClicked = useSetRecoilState(clickedCategory);
   const increaseIndex = () => {
     if (movies) {
       if (leaving) return;
@@ -139,16 +142,38 @@ function Slider({ movies, category }: IMovies) {
   const navigate = useNavigate();
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
+    setClicked(category);
+  };
+
+  let title = "";
+  if (category === SliderCategory.now_playing) {
+    title = "Now Playing";
+  } else if (category === SliderCategory.popular) {
+    title = "Popular";
+  } else if (category === SliderCategory.top_rated) {
+    title = "Top Rated";
+  } else if (category === SliderCategory.upcoming) {
+    title = "Upcoming";
+  }
+  const boxTransformOrigin = (mapIndex: number) => {
+    let number = 0.5;
+    if (mapIndex === 0) {
+      number = 0;
+    } else if (mapIndex === 5) {
+      number = 1;
+    }
+    return { originX: number };
   };
   return (
     <Wrapper>
-      <SliderTitle>Now Playing</SliderTitle>
+      <SliderTitle>{title}</SliderTitle>
       <AnimatePresence
         custom={forward}
         initial={false}
         onExitComplete={toggleLeaving}
       >
         <Arrow
+          key="SliderArrow"
           variants={arrowVar}
           initial="initial"
           whileHover="hover"
@@ -169,7 +194,7 @@ function Slider({ movies, category }: IMovies) {
           {movies?.results
             .slice(1)
             .slice(offset * index, offset * index + offset)
-            .map((movie) => (
+            .map((movie, mapIndex) => (
               <Box
                 layoutId={movie.id + category + ""}
                 variants={boxVar}
@@ -182,6 +207,7 @@ function Slider({ movies, category }: IMovies) {
                   "w500"
                 )}
                 onClick={() => onBoxClicked(movie.id)}
+                style={boxTransformOrigin(mapIndex)}
               >
                 <Info variants={infoVar}>
                   <h4>{movie.title}</h4>
@@ -190,6 +216,7 @@ function Slider({ movies, category }: IMovies) {
             ))}
         </Row>
         <Arrow
+          key="SliderArrow2"
           variants={arrowVar}
           initial="initial"
           whileHover="hover"

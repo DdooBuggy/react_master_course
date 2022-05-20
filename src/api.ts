@@ -1,7 +1,7 @@
 const API_KEY = "4d9d00b720becb4f431355610730fd73";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
-interface IMovie {
+export interface IMovie {
   adult: boolean;
   backdrop_path: string;
   genre_ids: [number];

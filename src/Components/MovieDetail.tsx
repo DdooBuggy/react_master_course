@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useViewportScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IGetMoviesResult } from "../api";
+import { IMovie } from "../api";
 import { makeImagePath } from "../utils";
 import { SliderCategory } from "../atoms";
 
@@ -49,18 +49,18 @@ const BigOverview = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 interface IMovies {
-  movies: IGetMoviesResult;
+  results: IMovie[];
   category: SliderCategory;
 }
-function MovieDetail({ movies, category }: IMovies) {
+function MovieDetail({ results, category }: IMovies) {
   const navigate = useNavigate();
   const bigMovieMatch = useMatch("/movies/:movieId");
   const onOverlayClick = () => navigate("/");
   const { scrollY } = useViewportScroll();
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
-    movies?.results.find(
-      (movie) => movie.id + "" === bigMovieMatch.params.movieId
+    results.find(
+      (movie) => movie.id + "" === bigMovieMatch.params.movieId + ""
     );
   return (
     <Wrapper>
@@ -68,11 +68,13 @@ function MovieDetail({ movies, category }: IMovies) {
         {bigMovieMatch ? (
           <>
             <Overlay
+              key="MovieDetailOverlay"
               onClick={onOverlayClick}
               exit={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             />
             <BigMovie
+              key="MovieDetailBigMovie"
               layoutId={
                 bigMovieMatch.params.movieId
                   ? bigMovieMatch.params.movieId + category + ""
@@ -83,6 +85,7 @@ function MovieDetail({ movies, category }: IMovies) {
               {clickedMovie && (
                 <>
                   <BigCover
+                    key="MovieDetailBigCover"
                     style={{
                       backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
                         clickedMovie.backdrop_path,
@@ -90,8 +93,12 @@ function MovieDetail({ movies, category }: IMovies) {
                       )})`,
                     }}
                   />
-                  <BigTitle>{clickedMovie.title}</BigTitle>
-                  <BigOverview>{clickedMovie.overview}</BigOverview>
+                  <BigTitle key="MovieDetailBigTitle">
+                    {clickedMovie.title}
+                  </BigTitle>
+                  <BigOverview key="MovieDetailBigOverview">
+                    {clickedMovie.overview}
+                  </BigOverview>
                 </>
               )}
             </BigMovie>

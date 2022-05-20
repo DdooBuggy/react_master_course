@@ -3,13 +3,11 @@ import { atom } from "recoil";
 export enum SliderCategory {
   "now_playing" = "now_playing",
   "popular" = "popular",
+  "top_rated" = "top_rated",
+  "upcoming" = "upcoming",
 }
 
-export const nowPlayingIndex = atom({
-  key: "nowPlayingIndex",
-  default: 0,
-});
-export const latestIndex = atom({
-  key: "latestIndex",
-  default: 0,
+export const clickedCategory = atom<SliderCategory>({
+  key: "clickedCategory",
+  default: SliderCategory.now_playing,
 });
