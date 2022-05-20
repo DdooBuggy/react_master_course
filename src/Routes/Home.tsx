@@ -41,9 +41,10 @@ function Home() {
     ["movies", "nowPlaying"],
     () => getMovies("now_playing")
   );
-  const [nowIndex, setNowIndex] = useRecoilState(nowPlayingIndex);
-  const { data: latestMovies, isLoading: latestLoading } =
-    useQuery<IGetMoviesResult>(["movies", "latest"], () => getMovies("latest"));
+  const { data: popularMovies, isLoading: popularLoading } =
+    useQuery<IGetMoviesResult>(["movies", "popular"], () =>
+      getMovies("popular")
+    );
   return (
     <Wrapper>
       {isLoading ? (
@@ -58,14 +59,27 @@ function Home() {
             <Title>{nowPlayingMovies?.results[0].title}</Title>
             <Overview>{nowPlayingMovies?.results[0].overview}</Overview>
           </Banner>
-          {nowPlayingMovies ? <MovieDetail movies={nowPlayingMovies} /> : null}
+          {nowPlayingMovies ? (
+            <MovieDetail
+              category={SliderCategory.now_playing}
+              movies={nowPlayingMovies}
+            />
+          ) : null}
           {nowPlayingMovies ? (
             <Slider
               category={SliderCategory.now_playing}
               movies={nowPlayingMovies}
             />
           ) : null}
-          {/* {latestMovies ? <Slider movies={latestMovies} /> : null} */}
+          {popularMovies ? (
+            <MovieDetail
+              category={SliderCategory.popular}
+              movies={popularMovies}
+            />
+          ) : null}
+          {popularMovies ? (
+            <Slider category={SliderCategory.popular} movies={popularMovies} />
+          ) : null}
         </>
       )}
     </Wrapper>

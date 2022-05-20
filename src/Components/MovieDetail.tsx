@@ -3,6 +3,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../api";
 import { makeImagePath } from "../utils";
+import { SliderCategory } from "../atoms";
 
 const Wrapper = styled.div``;
 const Overlay = styled(motion.div)`
@@ -49,8 +50,9 @@ const BigOverview = styled.p`
 `;
 interface IMovies {
   movies: IGetMoviesResult;
+  category: SliderCategory;
 }
-function MovieDetail({ movies }: IMovies) {
+function MovieDetail({ movies, category }: IMovies) {
   const navigate = useNavigate();
   const bigMovieMatch = useMatch("/movies/:movieId");
   const onOverlayClick = () => navigate("/");
@@ -71,7 +73,11 @@ function MovieDetail({ movies }: IMovies) {
               animate={{ opacity: 1 }}
             />
             <BigMovie
-              layoutId={bigMovieMatch.params.movieId}
+              layoutId={
+                bigMovieMatch.params.movieId
+                  ? bigMovieMatch.params.movieId + category + ""
+                  : ""
+              }
               style={{ top: scrollY.get() + 100 }}
             >
               {clickedMovie && (

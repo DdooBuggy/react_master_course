@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { IGetMoviesResult } from "../api";
-import { nowPlayingIndex, SliderCategory } from "../atoms";
+import { SliderCategory } from "../atoms";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -113,7 +112,7 @@ interface IMovies {
 }
 
 function Slider({ movies, category }: IMovies) {
-  const [index, setIndex] = useRecoilState(nowPlayingIndex);
+  const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [forward, setForward] = useState(true);
   const increaseIndex = () => {
@@ -172,7 +171,7 @@ function Slider({ movies, category }: IMovies) {
             .slice(offset * index, offset * index + offset)
             .map((movie) => (
               <Box
-                layoutId={movie.id + ""}
+                layoutId={movie.id + category + ""}
                 variants={boxVar}
                 initial="normal"
                 whileHover="hover"

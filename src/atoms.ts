@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 
 export enum SliderCategory {
-  "now_playing",
-  "latest",
+  "now_playing" = "now_playing",
+  "popular" = "popular",
 }
 
 export const nowPlayingIndex = atom({
