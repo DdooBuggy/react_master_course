@@ -71,13 +71,11 @@ function MovieDetail({ results, category }: IMovies) {
         {bigMovieMatch ? (
           <>
             <Overlay
-              key="MovieDetailOverlay"
               onClick={onOverlayClick}
               exit={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             />
             <BigMovie
-              key="MovieDetailBigMovie"
               layoutId={
                 bigMovieMatch.params.movieId
                   ? bigMovieMatch.params.movieId + category + ""
@@ -88,7 +86,6 @@ function MovieDetail({ results, category }: IMovies) {
               {clickedMovie && (
                 <>
                   <BigCover
-                    key="MovieDetailBigCover"
                     style={{
                       backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
                         clickedMovie.backdrop_path,
@@ -97,17 +94,11 @@ function MovieDetail({ results, category }: IMovies) {
                     }}
                   />
                   {clickedMovie.title.length < 35 ? (
-                    <BigTitleShort key="MovieDetailBigTitle">
-                      {clickedMovie.title}
-                    </BigTitleShort>
+                    <BigTitleShort>{clickedMovie.title}</BigTitleShort>
                   ) : (
-                    <BigTitleLong key="MovieDetailBigTitle">
-                      {clickedMovie.title}
-                    </BigTitleLong>
+                    <BigTitleLong>{clickedMovie.title}</BigTitleLong>
                   )}
-                  <BigOverview key="MovieDetailBigOverview">
-                    {clickedMovie.overview}
-                  </BigOverview>
+                  <BigOverview>{clickedMovie.overview}</BigOverview>
                 </>
               )}
             </BigMovie>
