@@ -84,3 +84,8 @@ export function getMovieDetail(movieId: string) {
     res.json()
   );
 }
+export function getMovieSimilar(movieId: string) {
+  return fetch(`${BASE_PATH}/movie/${movieId}/similar?api_key=${API_KEY}`).then(
+    (res) => res.json()
+  );
+}

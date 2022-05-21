@@ -40,7 +40,7 @@ const BannerBtn = styled(motion.button)`
   width: 100px;
   height: 40px;
   margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: ${(props) => props.theme.black.lighter};
   color: white;
   border-radius: 10px;
 `;

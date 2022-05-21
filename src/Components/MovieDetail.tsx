@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { IMovie } from "../api";
 import { makeImagePath } from "../utils";
 import { SliderCategory } from "../atoms";
+import MovieDetailInfo from "./MovieDetailInfo";
 
 const Wrapper = styled.div``;
 const Overlay = styled(motion.div)`
@@ -18,8 +19,8 @@ const Overlay = styled(motion.div)`
 const BigMovie = styled(motion.div)`
   z-index: 99;
   position: absolute;
-  width: 40vw;
-  height: 80vh;
+  width: 45vw;
+  height: 90vh;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -31,26 +32,9 @@ const BigCover = styled.div`
   width: 100%;
   background-size: cover;
   background-position: center center;
-  height: 400px;
+  height: 600px;
 `;
 
-const BigTitleShort = styled.h3`
-  color: ${(props) => props.theme.white.lighter};
-  padding: 20px;
-  font-size: 46px;
-  position: relative;
-  top: -80px;
-`;
-const BigTitleLong = styled(BigTitleShort)`
-  font-size: 35px;
-`;
-
-const BigOverview = styled.p`
-  padding: 20px;
-  position: relative;
-  top: -80px;
-  color: ${(props) => props.theme.white.lighter};
-`;
 interface IMovies {
   results: IMovie[];
   category: SliderCategory;
@@ -93,12 +77,13 @@ function MovieDetail({ results, category }: IMovies) {
                       )})`,
                     }}
                   />
-                  {clickedMovie.title.length < 35 ? (
+                  <MovieDetailInfo movieId={clickedMovie.id} />
+                  {/* {clickedMovie.title.length < 35 ? (
                     <BigTitleShort>{clickedMovie.title}</BigTitleShort>
                   ) : (
                     <BigTitleLong>{clickedMovie.title}</BigTitleLong>
                   )}
-                  <BigOverview>{clickedMovie.overview}</BigOverview>
+                  <BigOverview>{clickedMovie.overview}</BigOverview> */}
                 </>
               )}
             </BigMovie>
