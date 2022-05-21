@@ -34,3 +34,53 @@ export function getMovies(movieCategory: string) {
     (res) => res.json()
   );
 }
+
+export interface IMovieDetail {
+  adult: boolean;
+  backdrop_path: string;
+  genres: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
+  homepage: string;
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  production_companies: [
+    {
+      id: number;
+      logo_path: string;
+      name: string;
+      origin_country: string;
+    }
+  ];
+  production_countries: [
+    {
+      iso_3166_1: string;
+      name: string;
+    }
+  ];
+  release_date: string;
+  runtime: number;
+  spoken_languages: [
+    {
+      english_name: string;
+      iso_639_1: string;
+      name: string;
+    }
+  ];
+  tagline: string;
+  title: string;
+  vote_average: number;
+}
+
+export function getMovieDetail(movieId: string) {
+  return fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}`).then((res) =>
+    res.json()
+  );
+}
