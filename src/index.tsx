@@ -63,6 +63,15 @@ body {
   line-height: 1.2;
   color:${(props) => props.theme.white.darker};
   background-color: black;
+  &::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 3px;
+    background-color: black;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: gray;
+  }
 }
 a {
   text-decoration:none;

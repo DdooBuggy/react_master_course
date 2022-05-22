@@ -8,6 +8,8 @@ import { clickedCategory, SliderCategory } from "../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -37,12 +39,14 @@ const Overview = styled.p`
   width: 50%;
 `;
 const BannerBtn = styled(motion.button)`
-  width: 100px;
-  height: 40px;
+  width: 200px;
+  height: 70px;
+  font-size: 27px;
+  background-color: rgba(255, 255, 255, 0.2);
   margin-top: 10px;
-  background-color: ${(props) => props.theme.black.lighter};
-  color: white;
-  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  cursor: pointer;
 `;
 
 function Home() {
@@ -101,7 +105,7 @@ function Home() {
                 }
                 onClick={onClicked}
               >
-                Details &rarr;
+                <FontAwesomeIcon icon={solid("circle-info")} /> More Info
               </BannerBtn>
             </AnimatePresence>
           </Banner>

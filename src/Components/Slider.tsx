@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { IGetMoviesResult } from "../api";
 import { clickedCategory, SliderCategory } from "../atoms";
 import { makeImagePath } from "../utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
 const Wrapper = styled.div`
   position: relative;
@@ -33,13 +35,17 @@ const Arrow = styled(motion.div)`
   align-items: center;
   border-radius: 10px;
   position: absolute;
+  font-size: 30px;
+  color: rgba(255, 255, 255, 0.1);
 `;
 const arrowVar = {
   initial: {
     backgroundColor: "rgba(255, 255, 255, 0)",
+    color: "rgba(255, 255, 255, 0.1)",
   },
   hover: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
+    color: "rgba(255, 255, 255, 0.7)",
     transition: { duration: 0.3 },
   },
 };
@@ -180,7 +186,7 @@ function Slider({ movies, category }: IMovies) {
           onClick={decreaseIndex}
           style={{ left: 10 }}
         >
-          {"<"}
+          <FontAwesomeIcon icon={solid("angle-left")} />
         </Arrow>
         <Row
           custom={forward}
@@ -227,7 +233,7 @@ function Slider({ movies, category }: IMovies) {
           onClick={increaseIndex}
           style={{ right: 10 }}
         >
-          {">"}
+          <FontAwesomeIcon icon={solid("angle-right")} />
         </Arrow>
       </AnimatePresence>
     </Wrapper>
