@@ -78,12 +78,12 @@ function SearchDetail({ results }: ISearches) {
                       )})`,
                     }}
                   />
-                  {/* {mediaType === MediaType.tv ? (
+                  {mediaType === MediaType.tv ? (
                     <SearchTvDetailInfo itemId={clickedItem.id} />
                   ) : null}
                   {mediaType === MediaType.movie ? (
                     <SearchMovieDetailInfo itemId={clickedItem.id} />
-                  ) : null} */}
+                  ) : null}
                 </>
               )}
             </BigItem>
