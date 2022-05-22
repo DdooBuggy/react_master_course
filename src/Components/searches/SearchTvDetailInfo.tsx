@@ -1,14 +1,18 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import {
-  getMovieDetail,
-  getMovieSimilar,
   IMovieResult,
   IMovieDetail,
+  getSearchDetail,
+  getSearchSimilar,
+  ITvDetail,
+  ITvResult,
 } from "../../api";
 import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { MediaType, mediaTypeAtom } from "../../atoms";
+import { useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   position: relative;
@@ -148,27 +152,29 @@ const RelatedMovieBox = styled.li<{ bgphoto: string }>`
   border-radius: 10px;
 `;
 
-function MovieDetailInfo({ movieId }: { movieId: number }) {
-  const { data, isLoading } = useQuery<IMovieDetail>(["movieDetail"], () =>
-    getMovieDetail(movieId + "")
+function SearchTvDetailInfo({ itemId }: { itemId: number }) {
+  const { data: tv, isLoading: tvLoading } = useQuery<ITvDetail>(
+    ["tvDetail"],
+    () => getSearchDetail(itemId + "", MediaType.tv)
   );
-  const { data: similarMovies, isLoading: similarLoading } =
-    useQuery<IMovieResult>(["similarMovies"], () =>
-      getMovieSimilar(movieId + "")
-    );
-  const companiesNames = data?.production_companies.map(
+
+  const { data: similartvs, isLoading: similarTvLoading } = useQuery<ITvResult>(
+    ["similarTvMovies"],
+    () => getSearchSimilar(itemId + "", MediaType.tv)
+  );
+  const companiesNames = tv?.production_companies.map(
     (company) => company.name
   );
-  const voiceNames = data?.spoken_languages.map((lang) => lang.name);
-  const genresNames = data?.genres.map((genre) => genre.name);
+  const voiceNames = tv?.spoken_languages.map((lang) => lang.name);
+  const genresNames = tv?.genres.map((genre) => genre.name);
   return (
     <Wrapper>
-      {data && (
+      {tv && (
         <>
-          {data.title.length < 35 ? (
-            <TitleShort>{data.title}</TitleShort>
+          {tv.name.length < 35 ? (
+            <TitleShort>{tv.name}</TitleShort>
           ) : (
-            <TitleLong>{data.title}</TitleLong>
+            <TitleLong>{tv?.name}</TitleLong>
           )}
           <Icons>
             <PlayBtn>
@@ -184,7 +190,7 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
               <FontAwesomeIcon icon={regular("thumbs-down")} />
             </Icon>
             <HomepageBtn>
-              <a href={data.homepage}>
+              <a href={tv.homepage}>
                 <FontAwesomeIcon icon={solid("house-chimney")} /> Homepage
               </a>
             </HomepageBtn>
@@ -193,25 +199,30 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
             <li>
               <FontAwesomeIcon icon={solid("star")} />
               <span> </span>
-              {data.vote_average}
+              {tv.vote_average}
             </li>
-            <li>{data.runtime} min</li>
-            <li>{data.release_date}</li>
+            <li>{tv.number_of_episodes} episodes</li>
+            <li>{tv.number_of_seasons} seasons</li>
+            {tv.adult ? <Adult>Adult Only</Adult> : null}
           </InfoDetails>
           <InfoBox>
             <MainDetails>
-              <Overview>{data.overview}</Overview>
+              <Overview>{tv.overview}</Overview>
             </MainDetails>
             <SubDetails>
-              <li>
-                <span>Production:</span> {companiesNames?.join(", ")}
-              </li>
-              <li>
-                <span>Supported voices:</span> {voiceNames?.join(", ")}
-              </li>
-              {data.tagline && (
+              {companiesNames?.length === 0 ? null : (
                 <li>
-                  <span>Intro:</span> {data?.tagline}
+                  <span>Production:</span> {companiesNames?.join(", ")}
+                </li>
+              )}
+              {voiceNames?.length === 0 ? null : (
+                <li>
+                  <span>Supported voices:</span> {voiceNames?.join(", ")}
+                </li>
+              )}
+              {tv.tagline && (
+                <li>
+                  <span>Intro:</span> {tv?.tagline}
                 </li>
               )}
               <li>
@@ -222,18 +233,18 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
           <Relateds>
             <RelatedMovieTitle>Related Movies</RelatedMovieTitle>
             <RelatedMovies>
-              {similarLoading ? (
+              {similarTvLoading ? (
                 <div>Loading...</div>
               ) : (
                 <>
-                  {similarMovies?.results.map((movie) => (
+                  {similartvs?.results.map((tv) => (
                     <RelatedMovieBox
-                      key={movie.id}
+                      key={tv.id}
                       bgphoto={makeImagePath(
-                        movie.backdrop_path || movie.poster_path,
+                        tv.backdrop_path || tv.poster_path,
                         "w500"
                       )}
-                      // onClick={() => onBoxClicked(movie.id)}
+                      // onClick={() => onBoxClicked(tv.id)}
                     ></RelatedMovieBox>
                   ))}
                 </>
@@ -246,4 +257,4 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
   );
 }
 
-export default MovieDetailInfo;
+export default SearchTvDetailInfo;

@@ -192,7 +192,6 @@ function TvDetailInfo({ tvId }: { tvId: number }) {
             </li>
             <li>{tvDetail.number_of_episodes} episodes</li>
             <li>{tvDetail.number_of_seasons} seasons</li>
-            {tvDetail.adult ? <Adult>Adult Only</Adult> : null}
           </InfoDetails>
           <InfoBox>
             <MainDetails>

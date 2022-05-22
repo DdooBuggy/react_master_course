@@ -1,14 +1,18 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import {
-  getMovieDetail,
-  getMovieSimilar,
   IMovieResult,
   IMovieDetail,
+  getSearchDetail,
+  getSearchSimilar,
+  ITvDetail,
+  ITvResult,
 } from "../../api";
 import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { MediaType, mediaTypeAtom } from "../../atoms";
+import { useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   position: relative;
@@ -148,27 +152,38 @@ const RelatedMovieBox = styled.li<{ bgphoto: string }>`
   border-radius: 10px;
 `;
 
-function MovieDetailInfo({ movieId }: { movieId: number }) {
-  const { data, isLoading } = useQuery<IMovieDetail>(["movieDetail"], () =>
-    getMovieDetail(movieId + "")
+function SearchMovieDetailInfo({ itemId }: { itemId: number }) {
+  const { data: movie, isLoading: movieLoading } = useQuery<IMovieDetail>(
+    ["movieDetail"],
+    () => getSearchDetail(itemId + "", MediaType.movie)
+  );
+  const { data: tv, isLoading: tvLoading } = useQuery<ITvDetail>(
+    ["tvDetail"],
+    () => getSearchDetail(itemId + "", MediaType.tv)
   );
   const { data: similarMovies, isLoading: similarLoading } =
     useQuery<IMovieResult>(["similarMovies"], () =>
-      getMovieSimilar(movieId + "")
+      getSearchSimilar(itemId + "", MediaType.movie)
     );
-  const companiesNames = data?.production_companies.map(
+  const { data: similartvs, isLoading: similarTvLoading } = useQuery<ITvResult>(
+    ["similarTvMovies"],
+    () => getSearchSimilar(itemId + "", MediaType.tv)
+  );
+  const [mediaType, setMediaType] = useRecoilState(mediaTypeAtom);
+
+  const companiesNames = movie?.production_companies.map(
     (company) => company.name
   );
-  const voiceNames = data?.spoken_languages.map((lang) => lang.name);
-  const genresNames = data?.genres.map((genre) => genre.name);
+  const voiceNames = movie?.spoken_languages.map((lang) => lang.name);
+  const genresNames = movie?.genres.map((genre) => genre.name);
   return (
     <Wrapper>
-      {data && (
+      {movie && (
         <>
-          {data.title.length < 35 ? (
-            <TitleShort>{data.title}</TitleShort>
+          {movie.title.length < 35 ? (
+            <TitleShort>{movie.title}</TitleShort>
           ) : (
-            <TitleLong>{data.title}</TitleLong>
+            <TitleLong>{movie?.title}</TitleLong>
           )}
           <Icons>
             <PlayBtn>
@@ -184,7 +199,7 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
               <FontAwesomeIcon icon={regular("thumbs-down")} />
             </Icon>
             <HomepageBtn>
-              <a href={data.homepage}>
+              <a href={movie.homepage}>
                 <FontAwesomeIcon icon={solid("house-chimney")} /> Homepage
               </a>
             </HomepageBtn>
@@ -193,14 +208,15 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
             <li>
               <FontAwesomeIcon icon={solid("star")} />
               <span> </span>
-              {data.vote_average}
+              {movie.vote_average}
             </li>
-            <li>{data.runtime} min</li>
-            <li>{data.release_date}</li>
+            <li>{movie.runtime} min</li>
+            <li>{movie.release_date}</li>
+            {movie.adult ? <Adult>Adult Only</Adult> : null}
           </InfoDetails>
           <InfoBox>
             <MainDetails>
-              <Overview>{data.overview}</Overview>
+              <Overview>{movie.overview}</Overview>
             </MainDetails>
             <SubDetails>
               <li>
@@ -209,9 +225,9 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
               <li>
                 <span>Supported voices:</span> {voiceNames?.join(", ")}
               </li>
-              {data.tagline && (
+              {movie.tagline && (
                 <li>
-                  <span>Intro:</span> {data?.tagline}
+                  <span>Intro:</span> {movie?.tagline}
                 </li>
               )}
               <li>
@@ -246,4 +262,4 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
   );
 }
 
-export default MovieDetailInfo;
+export default SearchMovieDetailInfo;

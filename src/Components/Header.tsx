@@ -4,6 +4,8 @@ import { Link, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { isSearch } from "../atoms";
 
 const Nav = styled(motion.div)`
   z-index: 99;
@@ -126,8 +128,10 @@ function Header() {
   const { register, handleSubmit } = useForm<IForm>();
   const navigate = useNavigate();
   const onValid = (data: IForm) => {
+    setIsSearch((prev) => !prev);
     navigate(`/search?keyword=${data.keyword}`);
   };
+  const setIsSearch = useSetRecoilState(isSearch);
   return (
     <Nav variants={navVar} animate={navAnimation} initial={"top"}>
       <Col>

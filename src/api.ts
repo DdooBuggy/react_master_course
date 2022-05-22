@@ -213,3 +213,43 @@ export function getTvSimilar(tvId: string) {
     (res) => res.json()
   );
 }
+
+// export function getMultiSearch(keyword: string) {
+//   return fetch(
+//     `${BASE_PATH}/search/multi?api_key=${API_KEY}&query=${keyword}`
+//   ).then((res) => res.json());
+// }
+
+export interface ISearch {
+  backdrop_path: string;
+  id: number;
+  media_type: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  vote_average: number;
+  vote_count: number;
+  first_air_date: string;
+  name: string;
+  original_name: string;
+}
+export interface ISearchResult {
+  page: number;
+  results: ISearch[];
+  total_pages: number;
+  total_results: number;
+}
+
+export function getSearchDetail(itemId: string, media: string) {
+  return fetch(`${BASE_PATH}/${media}/${itemId}?api_key=${API_KEY}`).then(
+    (res) => res.json()
+  );
+}
+export function getSearchSimilar(itemId: string, media: string) {
+  return fetch(
+    `${BASE_PATH}/${media}/${itemId}/similar?api_key=${API_KEY}`
+  ).then((res) => res.json());
+}
