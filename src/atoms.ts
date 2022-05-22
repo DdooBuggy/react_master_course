@@ -5,6 +5,8 @@ export enum SliderCategory {
   "popular" = "popular",
   "top_rated" = "top_rated",
   "upcoming" = "upcoming",
+  "airing_today" = "airing_today",
+  "on_the_air" = "on_the_air",
 }
 
 export const clickedCategory = atom<SliderCategory>({

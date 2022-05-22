@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult, IMovie } from "../api";
+import { getMovies, IMovie, IMovieResult } from "../api";
 import { makeImagePath } from "../utils";
-import Slider from "../Components/Slider";
-import MovieDetail from "../Components/MovieDetail";
+import Slider from "../Components/movies/Slider";
+import MovieDetail from "../Components/movies/MovieDetail";
 import { clickedCategory, SliderCategory } from "../atoms";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,26 +47,27 @@ const BannerBtn = styled(motion.button)`
   color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   cursor: pointer;
+  border: none;
 `;
 
 function Home() {
   const { data: nowPlayingMovies, isLoading: nowLoading } =
-    useQuery<IGetMoviesResult>(["movies", SliderCategory.now_playing], () =>
+    useQuery<IMovieResult>(["movies", SliderCategory.now_playing], () =>
       getMovies(SliderCategory.now_playing)
     );
   const { data: popularMovies, isLoading: popularLoading } =
-    useQuery<IGetMoviesResult>(["movies", SliderCategory.popular], () =>
+    useQuery<IMovieResult>(["movies", SliderCategory.popular], () =>
       getMovies(SliderCategory.popular)
     );
   const { data: topRatedMovies, isLoading: topRatedLoading } =
-    useQuery<IGetMoviesResult>(["movies", SliderCategory.top_rated], () =>
+    useQuery<IMovieResult>(["movies", SliderCategory.top_rated], () =>
       getMovies(SliderCategory.top_rated)
     );
   const { data: upcomingMovies, isLoading: upcomingLoading } =
-    useQuery<IGetMoviesResult>(["movies", SliderCategory.upcoming], () =>
+    useQuery<IMovieResult>(["movies", SliderCategory.upcoming], () =>
       getMovies(SliderCategory.upcoming)
     );
-  const clicked = useRecoilValue(clickedCategory);
+  const [clicked, setClicked] = useRecoilState(clickedCategory);
   let movies;
   if (clicked === SliderCategory.now_playing) {
     movies = nowPlayingMovies;
@@ -77,7 +78,6 @@ function Home() {
   } else if (clicked === SliderCategory.upcoming) {
     movies = upcomingMovies;
   }
-  const setClicked = useSetRecoilState(clickedCategory);
   const navigate = useNavigate();
   const onClicked = () => {
     setClicked(SliderCategory.now_playing);
@@ -117,19 +117,19 @@ function Home() {
 
           <Slider
             category={SliderCategory.now_playing}
-            movies={nowPlayingMovies as IGetMoviesResult}
+            movies={nowPlayingMovies as IMovieResult}
           />
           <Slider
             category={SliderCategory.popular}
-            movies={popularMovies as IGetMoviesResult}
+            movies={popularMovies as IMovieResult}
           />
           <Slider
             category={SliderCategory.top_rated}
-            movies={topRatedMovies as IGetMoviesResult}
+            movies={topRatedMovies as IMovieResult}
           />
           <Slider
             category={SliderCategory.upcoming}
-            movies={upcomingMovies as IGetMoviesResult}
+            movies={upcomingMovies as IMovieResult}
           />
         </>
       )}

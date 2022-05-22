@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { IGetMoviesResult } from "../api";
-import { clickedCategory, SliderCategory } from "../atoms";
-import { makeImagePath } from "../utils";
+import { ITvResult } from "../../api";
+import { clickedCategory, SliderCategory } from "../../atoms";
+import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
@@ -114,52 +114,52 @@ const infoVar = {
 
 const offset = 6;
 
-interface IMovies {
-  movies: IGetMoviesResult;
+interface ITvs {
+  tvs: ITvResult;
   category: SliderCategory;
 }
 
-function Slider({ movies, category }: IMovies) {
+function Slider({ tvs, category }: ITvs) {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [forward, setForward] = useState(true);
   const setClicked = useSetRecoilState(clickedCategory);
   const increaseIndex = () => {
-    if (movies) {
+    if (tvs) {
       if (leaving) return;
       toggleLeaving();
       setForward(true);
-      const totalMovies = movies.results.length - 1;
+      const totalMovies = tvs.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
   const decreaseIndex = () => {
-    if (movies) {
+    if (tvs) {
       if (leaving) return;
       toggleLeaving();
       setForward(false);
-      const totalMovies = movies.results.length - 1;
+      const totalMovies = tvs.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
     }
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const navigate = useNavigate();
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+  const onBoxClicked = (tvId: number) => {
+    navigate(`/tv/${tvId}`);
     setClicked(category);
   };
 
   let title = "";
-  if (category === SliderCategory.now_playing) {
-    title = "Now Playing";
+  if (category === SliderCategory.airing_today) {
+    title = "Airing Today";
+  } else if (category === SliderCategory.on_the_air) {
+    title = "On the air";
   } else if (category === SliderCategory.popular) {
     title = "Popular";
   } else if (category === SliderCategory.top_rated) {
     title = "Top Rated";
-  } else if (category === SliderCategory.upcoming) {
-    title = "Upcoming";
   }
   const boxTransformOrigin = (mapIndex: number) => {
     let number = 0.5;
@@ -197,29 +197,29 @@ function Slider({ movies, category }: IMovies) {
           transition={{ type: "tween", duration: 1 }}
           key={index}
         >
-          {movies?.results
+          {tvs?.results
             .slice(1)
             .slice(offset * index, offset * index + offset)
-            .map((movie, mapIndex) => (
+            .map((tv, mapIndex) => (
               <Box
-                layoutId={movie.id + category + ""}
+                layoutId={tv.id + category + ""}
                 variants={boxVar}
                 initial="normal"
                 whileHover="hover"
                 transition={{ type: "tween" }}
-                key={movie.id}
+                key={tv.id}
                 bgphoto={makeImagePath(
-                  movie.backdrop_path || movie.poster_path,
+                  tv.backdrop_path || tv.poster_path,
                   "w500"
                 )}
-                onClick={() => onBoxClicked(movie.id)}
+                onClick={() => onBoxClicked(tv.id)}
                 style={boxTransformOrigin(mapIndex)}
               >
                 <Info variants={infoVar}>
-                  {movie.title.length > 35 ? (
-                    <InfoTitleLong>{movie.title}</InfoTitleLong>
+                  {tv.name.length > 35 ? (
+                    <InfoTitleLong>{tv.name}</InfoTitleLong>
                   ) : (
-                    <InfoTitleShort>{movie.title}</InfoTitleShort>
+                    <InfoTitleShort>{tv.name}</InfoTitleShort>
                   )}
                 </Info>
               </Box>

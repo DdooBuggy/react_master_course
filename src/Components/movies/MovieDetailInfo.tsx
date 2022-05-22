@@ -3,10 +3,10 @@ import styled from "styled-components";
 import {
   getMovieDetail,
   getMovieSimilar,
-  IGetMoviesResult,
+  IMovieResult,
   IMovieDetail,
-} from "../api";
-import { makeImagePath } from "../utils";
+} from "../../api";
+import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
 
@@ -81,7 +81,9 @@ const InfoBox = styled.div`
   gap: 20px;
 `;
 const MainDetails = styled.div``;
-const Adult = styled.li``;
+const Adult = styled.li`
+  color: red;
+`;
 const Overview = styled.p`
   font-size: 20px;
   line-height: 1.4;
@@ -151,7 +153,7 @@ function MovieDetailInfo({ movieId }: { movieId: number }) {
     getMovieDetail(movieId + "")
   );
   const { data: similarMovies, isLoading: similarLoading } =
-    useQuery<IGetMoviesResult>(["similarMovies"], () =>
+    useQuery<IMovieResult>(["similarMovies"], () =>
       getMovieSimilar(movieId + "")
     );
   const companiesNames = data?.production_companies.map(

@@ -1,9 +1,9 @@
 import { AnimatePresence, motion, useViewportScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IMovie } from "../api";
-import { makeImagePath } from "../utils";
-import { SliderCategory } from "../atoms";
+import { IMovie } from "../../api";
+import { makeImagePath } from "../../utils";
+import { SliderCategory } from "../../atoms";
 import MovieDetailInfo from "./MovieDetailInfo";
 
 const Wrapper = styled.div``;
@@ -72,18 +72,12 @@ function MovieDetail({ results, category }: IMovies) {
                   <BigCover
                     style={{
                       backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                        clickedMovie.backdrop_path,
+                        clickedMovie.backdrop_path || clickedMovie.poster_path,
                         "w500"
                       )})`,
                     }}
                   />
                   <MovieDetailInfo movieId={clickedMovie.id} />
-                  {/* {clickedMovie.title.length < 35 ? (
-                    <BigTitleShort>{clickedMovie.title}</BigTitleShort>
-                  ) : (
-                    <BigTitleLong>{clickedMovie.title}</BigTitleLong>
-                  )}
-                  <BigOverview>{clickedMovie.overview}</BigOverview> */}
                 </>
               )}
             </BigMovie>
