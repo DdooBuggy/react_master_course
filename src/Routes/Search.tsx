@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { ISearch, ISearchResult } from "../api";
 import { isSearch, keywordAtom, MediaType, mediaTypeAtom } from "../atoms";
 import { makeImagePath } from "../utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import SearchDetail from "../Components/searches/SearchDetail";
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100vh;
   padding: 150px 60px 0 60px;
 `;
 const Title = styled.h1`
@@ -21,7 +20,7 @@ const Items = styled.ul`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
-  height: 100%;
+  height: 100vh;
 `;
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: white;
@@ -69,7 +68,7 @@ const infoVar = {
 function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
-  const setKeyword = useSetRecoilState(keywordAtom);
+  const [backKeyword, setKeyword] = useRecoilState(keywordAtom);
   useEffect(() => {
     if (keyword) {
       setKeyword(keyword);
@@ -110,7 +109,7 @@ function Search() {
     <Wrapper>
       {searchResults ? (
         <>
-          <Title>Search for: {keyword}</Title>
+          <Title>Search for: {backKeyword}</Title>
           <Items>
             {searchResults?.map((item, mapIndex) => (
               <Box

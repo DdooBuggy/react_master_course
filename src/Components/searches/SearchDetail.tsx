@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useViewportScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { ISearch } from "../../api";
 import { keywordAtom, MediaType, mediaTypeAtom } from "../../atoms";
@@ -41,7 +41,7 @@ interface ISearches {
   results: ISearch[];
 }
 function SearchDetail({ results }: ISearches) {
-  const [mediaType, setMediaType] = useRecoilState(mediaTypeAtom);
+  const mediaType = useRecoilValue(mediaTypeAtom);
   const keyword = useRecoilValue(keywordAtom);
   const navigate = useNavigate();
   const bigMatch = useMatch("/search/contents/:searchId");

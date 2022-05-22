@@ -5,14 +5,11 @@ import {
   IMovieDetail,
   getSearchDetail,
   getSearchSimilar,
-  ITvDetail,
-  ITvResult,
 } from "../../api";
 import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { MediaType, mediaTypeAtom } from "../../atoms";
-import { useRecoilState } from "recoil";
+import { MediaType } from "../../atoms";
 
 const Wrapper = styled.div`
   position: relative;
@@ -85,9 +82,7 @@ const InfoBox = styled.div`
   gap: 20px;
 `;
 const MainDetails = styled.div``;
-const Adult = styled.li`
-  color: red;
-`;
+
 const Overview = styled.p`
   font-size: 20px;
   line-height: 1.4;
@@ -162,8 +157,6 @@ function SearchMovieDetailInfo({ itemId }: { itemId: number }) {
       getSearchSimilar(itemId + "", MediaType.movie)
     );
 
-  const [mediaType, setMediaType] = useRecoilState(mediaTypeAtom);
-
   const companiesNames = movie?.production_companies.map(
     (company) => company.name
   );
@@ -205,7 +198,6 @@ function SearchMovieDetailInfo({ itemId }: { itemId: number }) {
             </li>
             <li>{movie.runtime} min</li>
             <li>{movie.release_date}</li>
-            {movie.adult ? <Adult>Adult Only</Adult> : null}
           </InfoDetails>
           <InfoBox>
             <MainDetails>

@@ -1,8 +1,6 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import {
-  IMovieResult,
-  IMovieDetail,
   getSearchDetail,
   getSearchSimilar,
   ITvDetail,
@@ -11,8 +9,7 @@ import {
 import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { MediaType, mediaTypeAtom } from "../../atoms";
-import { useRecoilState } from "recoil";
+import { MediaType } from "../../atoms";
 
 const Wrapper = styled.div`
   position: relative;

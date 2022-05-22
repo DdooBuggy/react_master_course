@@ -214,12 +214,6 @@ export function getTvSimilar(tvId: string) {
   );
 }
 
-// export function getMultiSearch(keyword: string) {
-//   return fetch(
-//     `${BASE_PATH}/search/multi?api_key=${API_KEY}&query=${keyword}`
-//   ).then((res) => res.json());
-// }
-
 export interface ISearch {
   backdrop_path: string;
   id: number;

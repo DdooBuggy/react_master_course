@@ -81,9 +81,7 @@ const InfoBox = styled.div`
   gap: 20px;
 `;
 const MainDetails = styled.div``;
-const Adult = styled.li`
-  color: red;
-`;
+
 const Overview = styled.p`
   font-size: 20px;
   line-height: 1.4;
