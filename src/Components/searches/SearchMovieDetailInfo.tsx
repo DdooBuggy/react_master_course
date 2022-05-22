@@ -157,18 +157,18 @@ function SearchMovieDetailInfo({ itemId }: { itemId: number }) {
     ["movieDetail"],
     () => getSearchDetail(itemId + "", MediaType.movie)
   );
-  const { data: tv, isLoading: tvLoading } = useQuery<ITvDetail>(
-    ["tvDetail"],
-    () => getSearchDetail(itemId + "", MediaType.tv)
-  );
+  // const { data: tv, isLoading: tvLoading } = useQuery<ITvDetail>(
+  //   ["tvDetail"],
+  //   () => getSearchDetail(itemId + "", MediaType.tv)
+  // );
   const { data: similarMovies, isLoading: similarLoading } =
     useQuery<IMovieResult>(["similarMovies"], () =>
       getSearchSimilar(itemId + "", MediaType.movie)
     );
-  const { data: similartvs, isLoading: similarTvLoading } = useQuery<ITvResult>(
-    ["similarTvMovies"],
-    () => getSearchSimilar(itemId + "", MediaType.tv)
-  );
+  // const { data: similartvs, isLoading: similarTvLoading } = useQuery<ITvResult>(
+  //   ["similarTvMovies"],
+  //   () => getSearchSimilar(itemId + "", MediaType.tv)
+  // );
   const [mediaType, setMediaType] = useRecoilState(mediaTypeAtom);
 
   const companiesNames = movie?.production_companies.map(

@@ -70,9 +70,11 @@ function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
   const setKeyword = useSetRecoilState(keywordAtom);
-  if (keyword) {
-    setKeyword(keyword);
-  }
+  useEffect(() => {
+    if (keyword) {
+      setKeyword(keyword);
+    }
+  }, [keyword]);
   const [searches, setSearches] = useState<ISearchResult>();
   const searchResults = searches?.results.filter(
     (search) => search.media_type !== MediaType.person
