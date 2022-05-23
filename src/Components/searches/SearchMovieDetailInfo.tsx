@@ -10,6 +10,7 @@ import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { MediaType } from "../../atoms";
+import { motion } from "framer-motion";
 
 const Wrapper = styled.div`
   position: relative;
@@ -147,6 +148,36 @@ const RelatedMovieBox = styled.li<{ bgphoto: string }>`
   border-radius: 10px;
 `;
 
+const Info = styled(motion.div)`
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 1)
+  );
+  border-radius: 10px;
+  padding: 20px;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+`;
+const InfoTitleShort = styled.h4`
+  text-align: center;
+  font-size: 30px;
+`;
+const InfoTitleLong = styled.h4`
+  text-align: center;
+  font-size: 20px;
+`;
+const infoVar = {
+  hover: {
+    opacity: 1,
+    transition: { duration: 0.2, type: "tween" },
+  },
+};
+
 function SearchMovieDetailInfo({ itemId }: { itemId: number }) {
   const { data: movie, isLoading: movieLoading } = useQuery<IMovieDetail>(
     ["movieDetail"],
@@ -235,7 +266,15 @@ function SearchMovieDetailInfo({ itemId }: { itemId: number }) {
                         "w500"
                       )}
                       // onClick={() => onBoxClicked(movie.id)}
-                    ></RelatedMovieBox>
+                    >
+                      <Info variants={infoVar} whileHover="hover">
+                        {movie.title.length > 30 ? (
+                          <InfoTitleLong>{movie.title}</InfoTitleLong>
+                        ) : (
+                          <InfoTitleShort>{movie.title}</InfoTitleShort>
+                        )}
+                      </Info>
+                    </RelatedMovieBox>
                   ))}
                 </>
               )}

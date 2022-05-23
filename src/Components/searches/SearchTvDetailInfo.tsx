@@ -10,6 +10,7 @@ import { makeImagePath } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { MediaType } from "../../atoms";
+import { motion } from "framer-motion";
 
 const Wrapper = styled.div`
   position: relative;
@@ -117,13 +118,13 @@ const SubDetails = styled.ul`
 const Relateds = styled.div`
   width: 100%;
 `;
-const RelatedMovieTitle = styled.div`
+const RelatedTvTitle = styled.div`
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: 600;
   color: #bdc3c7;
 `;
-const RelatedMovies = styled.ul`
+const RelatedTvs = styled.ul`
   overflow-y: scroll;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -141,13 +142,43 @@ const RelatedMovies = styled.ul`
     background-color: gray;
   }
 `;
-const RelatedMovieBox = styled.li<{ bgphoto: string }>`
+const RelatedTvBox = styled.li<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
   height: 250px;
   border-radius: 10px;
 `;
+
+const Info = styled(motion.div)`
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 1)
+  );
+  border-radius: 10px;
+  padding: 20px;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+`;
+const InfoTitleShort = styled.h4`
+  text-align: center;
+  font-size: 30px;
+`;
+const InfoTitleLong = styled.h4`
+  text-align: center;
+  font-size: 20px;
+`;
+const infoVar = {
+  hover: {
+    opacity: 1,
+    transition: { duration: 0.2, type: "tween" },
+  },
+};
 
 function SearchTvDetailInfo({ itemId }: { itemId: number }) {
   const { data: tv, isLoading: tvLoading } = useQuery<ITvDetail>(
@@ -228,25 +259,33 @@ function SearchTvDetailInfo({ itemId }: { itemId: number }) {
             </SubDetails>
           </InfoBox>
           <Relateds>
-            <RelatedMovieTitle>Related Movies</RelatedMovieTitle>
-            <RelatedMovies>
+            <RelatedTvTitle>Related Tvs</RelatedTvTitle>
+            <RelatedTvs>
               {similarTvLoading ? (
                 <div>Loading...</div>
               ) : (
                 <>
                   {similartvs?.results.map((tv) => (
-                    <RelatedMovieBox
+                    <RelatedTvBox
                       key={tv.id}
                       bgphoto={makeImagePath(
                         tv.backdrop_path || tv.poster_path,
                         "w500"
                       )}
                       // onClick={() => onBoxClicked(tv.id)}
-                    ></RelatedMovieBox>
+                    >
+                      <Info variants={infoVar} whileHover="hover">
+                        {tv.name.length > 30 ? (
+                          <InfoTitleLong>{tv.name}</InfoTitleLong>
+                        ) : (
+                          <InfoTitleShort>{tv.name}</InfoTitleShort>
+                        )}
+                      </Info>
+                    </RelatedTvBox>
                   ))}
                 </>
               )}
-            </RelatedMovies>
+            </RelatedTvs>
           </Relateds>
         </>
       )}

@@ -52,6 +52,9 @@ function SearchDetail({ results }: ISearches) {
   const clickedItem =
     bigMatch?.params.searchId &&
     results.find((item) => item.id + "" === bigMatch.params.searchId + "");
+  if (clickedItem) {
+    console.log(clickedItem.backdrop_path, clickedItem.poster_path);
+  }
   return (
     <Wrapper>
       <AnimatePresence>
