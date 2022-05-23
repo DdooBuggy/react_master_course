@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useViewportScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { ISearch } from "../../api";
+import { ISearch, NO_IMG_URL } from "../../api";
 import { keywordAtom, MediaType, mediaTypeAtom } from "../../atoms";
 import { makeImagePath } from "../../utils";
 import SearchMovieDetailInfo from "./SearchMovieDetailInfo";
@@ -52,9 +52,6 @@ function SearchDetail({ results }: ISearches) {
   const clickedItem =
     bigMatch?.params.searchId &&
     results.find((item) => item.id + "" === bigMatch.params.searchId + "");
-  if (clickedItem) {
-    console.log(clickedItem.backdrop_path, clickedItem.poster_path);
-  }
   return (
     <Wrapper>
       <AnimatePresence>
@@ -73,14 +70,23 @@ function SearchDetail({ results }: ISearches) {
             >
               {clickedItem && (
                 <>
-                  <BigCover
-                    style={{
-                      backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                        clickedItem.backdrop_path || clickedItem.poster_path,
-                        "w500"
-                      )})`,
-                    }}
-                  />
+                  {clickedItem.backdrop_path || clickedItem.poster_path ? (
+                    <BigCover
+                      style={{
+                        backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                          clickedItem.backdrop_path || clickedItem.poster_path,
+                          "w500"
+                        )})`,
+                      }}
+                    />
+                  ) : (
+                    <BigCover
+                      style={{
+                        backgroundImage: NO_IMG_URL,
+                      }}
+                    />
+                  )}
+
                   {mediaType === MediaType.tv ? (
                     <SearchTvDetailInfo itemId={clickedItem.id} />
                   ) : null}

@@ -1,5 +1,7 @@
 const API_KEY = "4d9d00b720becb4f431355610730fd73";
 const BASE_PATH = "https://api.themoviedb.org/3";
+export const NO_IMG_URL =
+  "https://chillhop.com/wp-content/themes/chillhop/assets/images/noimg.png";
 
 export interface IMovie {
   adult: boolean;

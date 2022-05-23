@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { ISearch, ISearchResult } from "../api";
+import { ISearch, ISearchResult, NO_IMG_URL } from "../api";
 import { isSearch, keywordAtom, MediaType, mediaTypeAtom } from "../atoms";
 import { makeImagePath } from "../utils";
 import { motion } from "framer-motion";
@@ -119,10 +119,14 @@ function Search() {
                 whileHover="hover"
                 transition={{ type: "tween" }}
                 key={item.id}
-                bgphoto={makeImagePath(
-                  item.backdrop_path || item.poster_path,
-                  "w500"
-                )}
+                bgphoto={
+                  item.backdrop_path || item.poster_path
+                    ? makeImagePath(
+                        item.backdrop_path || item.poster_path,
+                        "w500"
+                      )
+                    : NO_IMG_URL
+                }
                 onClick={() => onBoxClicked(item.id, item.media_type)}
                 style={boxTransformOrigin(mapIndex)}
               >
